@@ -1,56 +1,35 @@
-class TreeNode {
-    int val;
-    TreeNode left, right;
-
-    TreeNode(int value) {
-        this.val = value;
-        this.left = this.right = null;
-    }
-}
-
 public class LogarithmicAlgorithm {
 
-    static TreeNode root;
-
-    public static TreeNode insert(TreeNode node, int value) {
-        if (node == null) {
-            return new TreeNode(value);
+    public static int binarySearch(int[] array, int target) {
+        int left = 0;
+        int right = array.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (array[mid] == target) {
+                return mid;
+            } else if (array[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
         }
-        if (value < node.val) {
-            node.left = insert(node.left, value);
-        } else if (value > node.val) {
-            node.right = insert(node.right, value);
-        }
-        return node;
-    }
-
-    public static TreeNode search(TreeNode node, int value) {
-        if (node == null || node.val == value) {
-            return node;
-        }
-        if (value < node.val) {
-            return search(node.left, value);
-        }
-        return search(node.right, value);
+        return -1;
     }
 
     public static void main(String[] args) {
-        int size = 10000;  // Número de nodos en el árbol
+        int size = 100000000;
+        int[] array = new int[size];
         for (int i = 0; i < size; i++) {
-            root = insert(root, i);  // Construir el árbol binario de búsqueda
+            array[i] = i;
         }
-        int target = size - 1;  // Elemento a buscar
+        int target = size - 1;
 
         long startTime = System.nanoTime();  // Iniciar el cronómetro
-        TreeNode result = search(root, target);
+        int index = binarySearch(array, target);
         long endTime = System.nanoTime();  // Detener el cronómetro
 
         long duration = (endTime - startTime) / 1000;  // Calcular la duración en milisegundos
-        if (result != null) {
-            System.out.println("El valor " + target + " se encontró en el árbol");
-        } else {
-            System.out.println("El valor " + target + " no se encontró en el árbol");
-        }
+        System.out.println("Índice del elemento encontrado: " + index);
         System.out.println("Tiempo de ejecución: " + duration + " microsegundos");
     }
 }

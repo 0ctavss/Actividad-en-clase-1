@@ -1,35 +1,73 @@
+import java.util.Arrays;
+
 public class LinearLogarithmicAlgorithm {
 
-    public static int binarySearch(int[] array, int target) {
-        int left = 0;
-        int right = array.length - 1;
-        while (left <= right) {
-            int mid = left + (right - left) / 2;
-            if (array[mid] == target) {
-                return mid;
-            } else if (array[mid] < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
+    public static void merge(int[] arr, int left, int middle, int right) {
+        int n1 = middle - left + 1;
+        int n2 = right - middle;
+
+        int[] L = new int[n1];
+        int[] R = new int[n2];
+
+        for (int i = 0; i < n1; ++i) {
+            L[i] = arr[left + i];
         }
-        return -1;
+        for (int j = 0; j < n2; ++j) {
+            R[j] = arr[middle + 1 + j];
+        }
+
+        int i = 0, j = 0;
+        int k = left;
+        while (i < n1 && j < n2) {
+            if (L[i] <= R[j]) {
+                arr[k] = L[i];
+                i++;
+            } else {
+                arr[k] = R[j];
+                j++;
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            arr[k] = L[i];
+            i++;
+            k++;
+        }
+
+        while (j < n2) {
+            arr[k] = R[j];
+            j++;
+            k++;
+        }
+    }
+
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int middle = (left + right) / 2;
+
+            mergeSort(arr, left, middle);
+            mergeSort(arr, middle + 1, right);
+
+            merge(arr, left, middle, right);
+        }
     }
 
     public static void main(String[] args) {
-        int size = 100000000;  // Tamaño del arreglo (debe estar ordenado para la búsqueda binaria)
+        int size = 10000000; // Tamaño del arreglo
         int[] array = new int[size];
         for (int i = 0; i < size; i++) {
-            array[i] = i;  // Llenar el arreglo con números ordenados
+            array[i] = (int)(Math.random() * 1000); // Llenar el arreglo con números aleatorios
         }
-        int target = size - 1;  // Elemento a buscar
 
-        long startTime = System.nanoTime();  // Iniciar el cronómetro
-        int index = binarySearch(array, target);
-        long endTime = System.nanoTime();  // Detener el cronómetro
+        long startTime = System.nanoTime(); // Iniciar el cronómetro
+        mergeSort(array, 0, array.length - 1);
+        long endTime = System.nanoTime(); // Detener el cronómetro
 
-        long duration = (endTime - startTime) / 1000;  // Calcular la duración en milisegundos
-        System.out.println("Índice del elemento encontrado: " + index);
+        long duration = (endTime - startTime) / 1000; // Calcular la duración en microsegundos
+
+        System.out.println("Arreglo ordenado:");
+        System.out.println(Arrays.toString(array));
         System.out.println("Tiempo de ejecución: " + duration + " microsegundos");
     }
 }
